@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Dashboard</title>
+    </head>
+
+    <body>
+        @model DashboardViewModel
+        <h1>Welcome to the Wedding Planner</h1>
+        <a href="Logout">Logout</a>
+        <div class="table">
+            <table>
+                <tr>
+                    <th>Wedding</th>
+                    <th>Date</th>
+                    <th>Guest</th>
+                    <th>Action</th>
+                </tr>
+
+                @foreach(Wedding wedding in Model.currentWeddings)
+                {
+                    <tr>
+                        <td><a href="/wedding/@wedding.WeddingId">@wedding.PartnerOne & @wedding.PartnerTwo</a></td>
+                        <td>@wedding.Date.ToString("MMM d, yyy")</td>
+                        <td>@wedding.UserWeddings.Count</td>
+                        <td>
+                            @{
+                                if(wedding.Host == @Model.thisUser)
+                                {
+                                    <a href="/delete/@wedding.WeddingId">Cancel Wedding</a>
+                                }
+                                else if(wedding.UserWeddings.Any(wed=>wed.UserId == @Model.thisUser.UserId))
+                                {
+                                    <a href="/remove/@wedding.WeddingId/@Model.thisUser.UserId">Un-RSVP</a>
+                                }
+                                else
+                                {
+                                    <a href="/RSVP/@wedding.WeddingId/@Model.thisUser.UserId">RSVP</a>
+                                }
+                            }
+                        </td>
+                    </tr>
+                }
+            </table>
+            <a href="/addWedding">New Wedding</a>
+        </div>
+    </body>
+</html>
