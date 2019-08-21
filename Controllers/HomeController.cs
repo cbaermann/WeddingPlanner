@@ -196,6 +196,11 @@ namespace WeddingPlanner.Controllers
             Wedding wedding = dbContext.Weddings
                 .Include(w=> w.Host)
                 .FirstOrDefault(w=>w.WeddingId == WeddingId);
+
+            if(wedding.Host.UserId!=HttpContext.Session.GetInt32("InSession"))
+            {
+                return RedirectToAction("Index");
+            }
             
             dbContext.Weddings.Remove(wedding);
             dbContext.SaveChanges();
